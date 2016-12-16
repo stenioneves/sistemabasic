@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cadastro de Pagamento</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:panel header="Cadastro de Pagamento" toggleable="true">
+			<p:growl id="growl" life="2000" />
+
+			<p:panelGrid columns="2">
+
+				<p:outputLabel value="Nome :" />
+				<p:inputText value="#{pagamentoBean.pagamento.nome}" required="true"
+					requiredMessage="O campo nome de ser preenchido" />
+				<p:outputLabel value="Valor:" />
+				<p:spinner value="#{pagamentoBean.pagamento.valor}" min="1"
+					stepFactor="0.5" max="1000" size="4" />
+				<p:outputLabel value="Data de Vencimento:" />
+				<p:calendar value="#{pagamentoBean.pagamento.dataV}"
+					pattern="dd/MM/yyyy" />
+				<p:outputLabel value="Data de Pagamento:" />
+				<p:calendar value="#{pagamentoBean.pagamento.dataP}"
+					pattern="dd/MM/yyyy" />
+				<p:outputLabel value="Conta Master:" />
+				<p:selectOneMenu value="#{pagamentoBean.pagamento.tipo}"
+					required="true" requiredMessage="Selecione uma conta">
+					<f:selectItem itemLabel=":: Selecione ::" itemValue="#{null}" />
+					<f:selectItems value="#{pagamentoBean.tipos}" var="tipo"
+						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+
+				</p:selectOneMenu>
+				<p:outputLabel value="Situação:" />
+				<p:selectOneMenu value="#{pagamentoBean.pagamento.situacao}"
+					required="true" requiredMessage="Selecione uma situação">
+					<f:selectItem itemLabel=":: Selecione ::" itemValue="#{null}" />
+					<f:selectItems value="#{pagamentoBean.situacoes}" var="tipo"
+						itemLabel="#{tipo}" itemValue="#{tipo}" />
+
+				</p:selectOneMenu>
+				<p:outputLabel value="Descrição :" />
+				<p:inputTextarea rows="5" cols="20"
+					value="#{pagamentoBean.pagamento.descricao}" required="true"
+					requiredMessage="Descrição é um campo obrigatório" />
+
+
+
+
+			</p:panelGrid>
+			<p:commandButton value="Cadastrar " icon="ui-icon-disk"
+				action="#{pagamentoBean.salvar}" update="@form" />
+
+
+		</p:panel>
+		</h:form>
+
+		<p:panel header="Pagamentos em Aberto" toggleable="true">
+			<h:form>
+				<p:dataTable  id="tbl" value="#{pagamentoBean.pag}" var="pags" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                 paginator="true" rows="10" style="margin-bottom:20px">
+                  <f:facet name="{Exporters}">
+                   <h:commandLink value="Excel" >
+                                 
+                <p:dataExporter type="xls" target="tbl" fileName="PagamentosAbertos" />
+            </h:commandLink>
+            &nbsp;
+            <h:commandLink value="PDF"  >
+                                 
+                <p:dataExporter type="pdf" target="tbl" fileName="PagamentosAbertos" />
+            </h:commandLink>
+            &nbsp;
+             <p:button value="Listar pagamentos" icon="ui-icon-grip-solid-horizontal
+ " outcome="listar_conta"/>
+            
+             
+             
+            </f:facet>
+
+					<p:column headerText="ID">
+						<h:outputText value="#{pags.codPag}" />
+
+					</p:column>
+
+					<p:column headerText="NOME">
+
+						<h:outputText value="#{pags.nome}" />
+
+					</p:column>
+					<p:column headerText="VALOR">
+						<h:outputText value="#{pags.valor}" />
+
+					</p:column>
+
+
+					<p:column headerText="DATA DE VENCIMENTO">
+						<h:outputText value="#{pags.dataV}" />
+					</p:column>
+					<p:column headerText="DESCRIÇÃO">
+						<h:outputText value="#{pags.descricao}" />
+					</p:column>
+					<p:column headerText="CONTA MASTER">
+						<h:outputText value="#{pags.tipo.label}" />
+
+					</p:column>
+					<p:column>
+						<p:commandLink value="Editar"
+							action="#{pagamentoBean.editar(pags)}" />
+
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+
+	
+
+</h:body>
+
+
+
+</html>
